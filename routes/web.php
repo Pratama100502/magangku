@@ -55,3 +55,5 @@ Route::prefix('manajemen_mentor')->group(function () {
     Route::put('/{id}', [MentorController::class, 'update'])->name('mentor.update');
     Route::delete('/{id}', [MentorController::class, 'destroy'])->name('mentor.destroy');
 });
+
+//test push
