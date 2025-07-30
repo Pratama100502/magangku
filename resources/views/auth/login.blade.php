@@ -34,7 +34,7 @@
       flex: 1;
     }
 
-    .login-form h3 {
+    .login-form h5 {
       font-weight: bold;
       margin-bottom: 20px;
     }
@@ -77,18 +77,28 @@
 
           <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="avatar" class="avatar">
 
+          @if ($errors->any())
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+
+          @if (session('success'))
+            <div class="alert alert-success">
+              {{ session('success') }}
+            </div>
+          @endif
+
           <form method="POST" action="{{ route('login.post') }}">
             @csrf
 
-            @session('error')
-              <div class="alert alert-danger" role="alert">
-                {{ $value }}
-              </div>
-            @endsession
-
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" id="email" required>
+              <input type="email" class="form-control" name="email" id="email" required autofocus>
             </div>
 
             <div class="mb-3">
@@ -98,13 +108,15 @@
 
             <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
 
-            <p class="mt-3 text-center">Don't have account? <a href="{{ route('register') }}">Create an account !</a></p>
+            <p class="mt-3 text-center text-muted">
+              Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
+            </p>
           </form>
         </div>
 
         <!-- Right - Image -->
         <div class="login-img d-none d-md-block" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');">
-          {{-- Replace the above URL with your own asset like: asset('images/sunset.jpg') --}}
+          {{-- Bisa ganti gambar ini dengan asset sendiri --}}
         </div>
       </div>
     </div>

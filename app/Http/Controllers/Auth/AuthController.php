@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use App\Models\PesertaMagang;
 
 class AuthController extends Controller
 {
@@ -25,79 +26,114 @@ class AuthController extends Controller
     public function postLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')->with('success', 'Login berhasil');
+        if (Auth::guard('peserta')->attempt($credentials)) {
+            return redirect()->intended('dashboard')->with('success', 'Login berhasil!');
         }
 
-        return redirect('login')->withErrors(['email' => 'Email atau password salah']);
+        return redirect()->route('login')->withErrors(['email' => 'Email atau password salah']);
     }
 
     public function postRegistration(Request $request)
-    {
-        $request->validate([
-            'name'                => 'required|string|max:255',
-            'username'            => 'required|string|max:255|unique:users',
-            'email'               => 'required|email|unique:users',
-            'password'            => 'required|confirmed|min:6',
-            'asal_kampus'         => 'required|string|max:255',
-            'jurusan'             => 'required|string|max:255',
-            'nim'                 => 'required|string|max:50',
-            'no_hp'               => 'required|string|max:20',
-            'keahlian'            => 'nullable|string|max:255',
-            'anggota'             => 'nullable|array',
-            'anggota.*'           => 'nullable|string|max:255',
-            'no_anggota'          => 'nullable|array',
-            'no_anggota.*'        => 'nullable|string|max:20',
-            'surat_permohonan'    => 'required|file|mimes:pdf,doc,docx|max:2048',
-            'surat_project'       => 'required|file|mimes:pdf,doc,docx|max:2048',
+{
+    $request->validate([
+        'nama'               => 'required|string|max:255',
+        'email'              => 'required|email|unique:peserta_magang,email',
+        'password'           => 'required|confirmed|min:6',
+        'asal_sekolah'       => 'required|string|max:255',
+        'jurusan'            => 'required|string|max:255',
+        'nim'                => 'required|string|max:50',
+        'no_hp'              => 'required|string|max:20',
+        'anggota'            => 'nullable|array',
+        'anggota.*'          => 'nullable|string|max:255',
+        'no_hp_anggota'      => 'nullable|array',
+        'no_hp_anggota.*'    => 'nullable|string|max:20',
+        'surat_permohonan'   => 'required|file|mimes:pdf,doc,docx|max:2048',
+        'proposal_proyek'    => 'required|file|mimes:pdf,doc,docx|max:2048',
+    ]);
+
+    try {
+        // Simpan file
+        $permohonanPath = $request->file('surat_permohonan')->store('uploads/surat_permohonan', 'public');
+        $proposalPath   = $request->file('proposal_proyek')->store('uploads/proposal_proyek', 'public');
+
+        DB::beginTransaction();
+
+        // Simpan ke tabel peserta_magang
+        $peserta = PesertaMagang::create([
+            'nama'        => $request->nama,
+            'email'       => $request->email,
+            'password'    => Hash::make($request->password),
+            'asal_sekolah'=> $request->asal_sekolah,
+            'jurusan'     => $request->jurusan,
+            'nim'         => $request->nim,
+            'no_hp'       => $request->no_hp,
         ]);
 
-        // Simpan file upload ke storage/app/public/uploads
-        $suratPermohonanPath = $request->file('surat_permohonan')->store('uploads', 'public');
-        $suratProjectPath    = $request->file('surat_project')->store('uploads', 'public');
+        // Simpan ke tabel anggota
+        if (!empty($request->anggota) && !empty($request->no_hp_anggota)) {
+            foreach ($request->anggota as $i => $namaAnggota) {
+                if ($namaAnggota && !empty($request->no_hp_anggota[$i])) {
+                    DB::table('anggota')->insert([
+                        'peserta_id' => $peserta->id,
+                        'nama'       => $namaAnggota,
+                        'no_hp'      => $request->no_hp_anggota[$i],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
 
-        // Buat user baru
-        $user = User::create([
-            'name'             => $request->name,
-            'username'         => $request->username,
-            'email'            => $request->email,
-            'password'         => Hash::make($request->password),
-            'asal_kampus'      => $request->asal_kampus,
-            'jurusan'          => $request->jurusan,
-            'nim'              => $request->nim,
-            'no_hp'            => $request->no_hp,
-            'keahlian'         => $request->keahlian,
-            'anggota'          => $request->anggota,
-            'no_anggota'       => $request->no_anggota,
-            'surat_permohonan' => $suratPermohonanPath,
-            'surat_project'    => $suratProjectPath,
+        // Simpan ke tabel dokumen (dua entri: permohonan & proposal)
+        DB::table('dokumen')->insert([
+            [
+                'peserta_id'     => $peserta->id,
+                'jenis_dokumen'  => 'permohonan_magang',
+                'file_path'      => $permohonanPath,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ],
+            [
+                'peserta_id'     => $peserta->id,
+                'jenis_dokumen'  => 'proposal_proyek',
+                'file_path'      => $proposalPath,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]
         ]);
 
-        Auth::login($user);
+        DB::commit();
 
-        return redirect('dashboard')->with('success', 'Registrasi berhasil. Selamat datang!');
+        Auth::guard('peserta')->login($peserta);
+        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors([
+            'error' => 'Terjadi kesalahan saat registrasi: ' . $e->getMessage()
+        ])->withInput();
     }
+}
+
 
     public function dashboard()
     {
-        if (Auth::check()) {
+        if (Auth::guard('peserta')->check()) {
             return view('dashboard');
         }
 
-        return redirect('login')->withErrors(['auth' => 'Silakan login terlebih dahulu.']);
+        return redirect()->route('login')->withErrors(['auth' => 'Silakan login terlebih dahulu.']);
     }
 
     public function logout()
     {
         Session::flush();
-        Auth::logout();
-
-        return redirect('login')->with('success', 'Berhasil logout');
+        Auth::guard('peserta')->logout();
+        return redirect()->route('login')->with('success', 'Berhasil logout.');
     }
 }

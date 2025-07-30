@@ -64,11 +64,12 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('mentor.index') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-solid fa-person-chalkboard" style="color: #f0f0f0;"></i>
                         <p>Manajemen Mentor</p>
                     </a>
                 </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
