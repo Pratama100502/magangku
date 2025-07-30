@@ -39,3 +39,9 @@ Route::get('/dashboard', [AuthController::class, 'dashboard'])
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
+
+
+//halaman admin
+Route::get('/test', function () {
+    return view('halaman_admin.test');
+});    
