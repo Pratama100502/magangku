@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\MentorModel;
 use Illuminate\Http\Request;
+use App\Models\MentorModel;
 use Illuminate\Support\Facades\Hash;
 
 class MentorController extends Controller
@@ -62,52 +62,56 @@ class MentorController extends Controller
     }
 
     public function edit($id)
-{
-    $mentor = MentorModel::findOrFail($id);
-    return view('halaman_admin.manajemen_mentor.update', compact('mentor'));
-}
+    {
+        $mentor = MentorModel::findOrFail($id);
+        return view('halaman_admin.manajemen_mentor.update', compact('mentor'));
+    }
 
-public function update(Request $request, $id)
-{
-    $mentor = MentorModel::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $mentor = MentorModel::findOrFail($id);
 
-    $request->validate([
-        'nama' => 'required',
-        'no_hp' => 'required',
-        'email' => 'required|email|unique:mentor,email,'.$id,
-        'bidang' => 'required',
-        'password' => 'nullable',
-    ], [
-        'nama.required' => 'Nama harus di isi.',
-        'no_hp.required' => 'No Hp harus di isi.',
-        'email.required' => 'Email harus di isi.',
-        'email.unique' => 'Email sudah terdaftar gunakan email lain.',
-        'bidang.required' => 'Bidang harus di isi.',
-    ]);
-
-    try {
-        $mentor->update([
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'email' => $request->email,
-            'bidang' => $request->bidang,
+        $request->validate([
+            'nama' => 'required',
+            'no_hp' => 'required',
+            'email' => 'required|email|unique:mentor,email,' . $id,
+            'bidang' => 'required',
+            'password' => 'nullable',
+        ], [
+            'nama.required' => 'Nama harus di isi.',
+            'no_hp.required' => 'No Hp harus di isi.',
+            'email.required' => 'Email harus di isi.',
+            'email.unique' => 'Email sudah terdaftar gunakan email lain.',
+            'bidang.required' => 'Bidang harus di isi.',
         ]);
 
-        if ($request->filled('password')) {
-            $mentor->update(['password' => Hash::make($request->password)]);
+        try {
+            $mentor->update([
+                'nama' => $request->nama,
+                'no_hp' => $request->no_hp,
+                'email' => $request->email,
+                'bidang' => $request->bidang,
+            ]);
+
+            if ($request->filled('password')) {
+                $mentor->update(['password' => Hash::make($request->password)]);
+            }
+
+            return redirect()->back()->with('success', 'Data mentor berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
-
-        return redirect()->back()->with('success', 'Data mentor berhasil diperbarui');
-
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
     }
-}
 
     public function destroy($id)
     {
-        $mentor = MentorModel::findOrFail($id);
-        $mentor->delete();
-        return redirect()->route('mentor.index')->with('success', 'Mentor berhasil dihapus.');
+        try {
+            $mentor = MentorModel::findOrFail($id);
+            $mentor->delete();
+            return redirect()->route('mentor.index')->with('success', 'Mentor berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
 }

@@ -143,7 +143,7 @@
         Swal.fire({
             icon: 'warning',
             title: 'Data Kosong!',
-            text: 'Tidak ada data blog yang tersedia.',
+            text: 'Tidak ada data mentor yang tersedia.',
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'OK',
             color: "#fff",

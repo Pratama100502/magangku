@@ -108,9 +108,7 @@
     <script src="{{ asset('asset_halaman_admin/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}">
     </script>
     <!-- AdminLTE App -->
-    <script src="{{ asset('asset_halaman_admin/adminlte/dist/js/adminlte.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('asset_halaman_admin/adminlte/dist/js/demo.js') }}"></script>
+    <script src="{{ asset('asset_halaman_admin/adminlte/dist/js/adminlte.js') }}"></script>    
 
     <script>
         $(function() {

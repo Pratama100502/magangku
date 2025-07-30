@@ -43,7 +43,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('peserta.index') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-solid fa-users" style="color: #f0f0f0;"></i>
                         <p>Data Peserta Magang</p>
                     </a>

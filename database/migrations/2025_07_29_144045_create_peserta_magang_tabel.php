@@ -23,6 +23,10 @@ return new class extends Migration
             $table->enum('status', ['mengajukan', 'diterima', 'diterima_dan_loa_dapat_di_ambil', 'aktif', 'selesai', 'ditolak'])->default('mengajukan');
             $table->string('catatan')->nullable();
             $table->foreignId(column: 'mentor_id')->nullable()->constrained('mentor')->onDelete('cascade');
+
+            //update
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_selesai')->nullable();
             $table->timestamps();
         });
     }

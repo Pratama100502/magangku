@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\MentorController;
+use App\Http\Controllers\Admin\PesertaMagangController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\MentorController;
+
 
 // Halaman utama
 Route::get('/', function () {
@@ -56,4 +58,13 @@ Route::prefix('manajemen_mentor')->group(function () {
     Route::delete('/{id}', [MentorController::class, 'destroy'])->name('mentor.destroy');
 });
 
-//test push
+// Manajemen Peserta Magang
+Route::prefix('manajemen_peserta_magang')->group(function () {
+    Route::get('/', [PesertaMagangController::class, 'index'])->name('peserta.index');
+    Route::get('/create', [PesertaMagangController::class, 'create'])->name('peserta.create');
+    Route::post('/', [PesertaMagangController::class, 'store'])->name('peserta.store');
+    Route::get('/{id}/edit', [PesertaMagangController::class, 'edit'])->name('peserta.edit');
+    Route::put('/{id}', [PesertaMagangController::class, 'update'])->name('peserta.update');
+    Route::get('/{id}', [PesertaMagangController::class, 'show'])->name('peserta.show');
+    Route::delete('/{id}', [PesertaMagangController::class, 'destroy'])->name('peserta.destroy');
+}); 
