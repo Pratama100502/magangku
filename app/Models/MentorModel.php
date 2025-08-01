@@ -19,8 +19,7 @@ class MentorModel extends Authenticatable
         'password',
         'bidang',
     ];
-
-    // Relasi ke peserta magang
+    
     public function pesertaMagang()
     {
         return $this->hasMany(PesertaMagang::class);

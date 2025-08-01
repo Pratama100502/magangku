@@ -227,19 +227,19 @@
         <!-- /.container-fluid -->
     </section>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Anggota dinamis
-            const anggotaContainer = document.getElementById('anggota-container');
-            const tambahAnggotaBtn = document.getElementById('tambah-anggota');
-            let anggotaCount = {{ $peserta->anggota->count() }};
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Anggota dinamis
+                const anggotaContainer = document.getElementById('anggota-container');
+                const tambahAnggotaBtn = document.getElementById('tambah-anggota');
+                let anggotaCount = {{ $peserta->anggota->count() }};
 
-            // Template untuk anggota baru
-            function createAnggotaField() {
-                anggotaCount++;
-                const div = document.createElement('div');
-                div.className = 'anggota-item row mb-3';
-                div.innerHTML = `
+                // Template untuk anggota baru
+                function createAnggotaField() {
+                    anggotaCount++;
+                    const div = document.createElement('div');
+                    div.className = 'anggota-item row mb-3';
+                    div.innerHTML = `
                     <div class="col-md-5">
                         <input type="text" class="form-control" name="anggota[${anggotaCount}][nama_anggota]" placeholder="Nama Anggota">
                     </div>
@@ -252,34 +252,14 @@
                         </button>
                     </div>
                 `;
-                return div;
-            }
-
-            // Tambah anggota baru
-            tambahAnggotaBtn.addEventListener('click', function() {
-                anggotaContainer.appendChild(createAnggotaField());
-            });
-
-            // Hapus anggota
-            anggotaContainer.addEventListener('click', function(e) {
-                if (e.target.classList.contains('hapus-anggota') || e.target.closest('.hapus-anggota')) {
-                    const item = e.target.closest('.anggota-item');
-                    if (item) {
-                        item.remove();
-                    }
+                    return div;
                 }
-            });
 
-            // Notifikasi
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    confirmButtonColor: '#3085d6'
-                }).then(() => {
-                    window.location.href = "{{ route('peserta.index') }}";
+                // Tambah anggota baru
+                tambahAnggotaBtn.addEventListener('click', function() {
+                    anggotaContainer.appendChild(createAnggotaField());
                 });
+<<<<<<< HEAD
             @endif
 
             @if (session('error'))
@@ -306,4 +286,54 @@
             @endif
         });
     </script>
+=======
+
+                // Hapus anggota
+                anggotaContainer.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('hapus-anggota') || e.target.closest('.hapus-anggota')) {
+                        const item = e.target.closest('.anggota-item');
+                        if (item) {
+                            item.remove();
+                        }
+                    }
+                });
+
+                // Notifikasi
+                @if (session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        confirmButtonColor: '#3085d6'
+                    }).then(() => {
+                        window.location.href = "{{ route('peserta.index') }}";
+                    });
+                @endif
+
+                @if (session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terdapat Kesalahan...',
+                        text: '{{ session('error') }}',
+                        confirmButtonColor: '#d33'
+                    });
+                @endif
+
+                @if ($errors->any())
+                    let errorMessages = "";
+                    @foreach ($errors->all() as $error)
+                        errorMessages += "{{ $error }}\n";
+                    @endforeach
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessages,
+                        confirmButtonColor: '#d33'
+                    });
+                @endif
+            });
+        </script>
+    </body>
+>>>>>>> dac0b1e91c0534eb34b86f66032a77d5ab1ca621
 @endsection

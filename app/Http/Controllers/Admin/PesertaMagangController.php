@@ -211,7 +211,11 @@ class PesertaMagangController extends Controller
         try {
             DB::beginTransaction();
 
-            $peserta = PesertaMagang::with('anggota')->findOrFail($id);
+            $peserta = PesertaMagang::with(['anggota', 'dokumen'])->findOrFail($id);
+
+            if ($peserta->dokumen) {
+                $peserta->dokumen()->delete();
+            }
 
             $peserta->anggota()->delete();
 
@@ -220,7 +224,7 @@ class PesertaMagangController extends Controller
             DB::commit();
 
             return redirect()->route('peserta.index')
-                ->with('success', 'Data peserta dan anggota berhasil dihapus!');
+                ->with('success', 'Data berhasil dihapus!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()

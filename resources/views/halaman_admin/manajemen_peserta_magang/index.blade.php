@@ -175,8 +175,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
+<<<<<<< HEAD
     </section>
 
     <script>
@@ -226,4 +227,55 @@
             });
         @endif
     </script>
+=======
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // SweetAlert untuk konfirmasi penghapusan data
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let form = this.closest('.delete-form');
+                        Swal.fire({
+                            title: "Apakah Anda yakin?",
+                            text: "Anda akan menghapus data peserta, anggota, dokumen, dan data yang dihapus tidak dapat dikembalikan!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#d33",
+                            cancelButtonColor: "#3085d6",
+                            confirmButtonText: "Ya, hapus!",
+                            background: "#283a5ae6", // Warna background
+                            color: "#fff" // Warna teks agar tetap terbaca
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // Submit form jika dikonfirmasi
+                            }
+                        });
+                    });
+                });
+
+                // SweetAlert jika data pencarian tidak ditemukan
+                @if (session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ERROR',
+                        text: "{{ session('error') }}",
+                        background: "#283a5ae6",
+                        color: "#fff"
+                    });
+                @endif
+            });
+            @if ($pesertas->isEmpty())
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Kosong!',
+                    text: 'Tidak ada data peserta magang yang tersedia.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                    color: "#fff",
+                    background: "#283a5ae6"
+                });
+            @endif
+        </script>
+    </body>
+>>>>>>> dac0b1e91c0534eb34b86f66032a77d5ab1ca621
 @endsection

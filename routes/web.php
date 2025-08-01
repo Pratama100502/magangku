@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\CalonPesertaController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DokumenController;
+use App\Http\Controllers\Admin\KalenderMagangController;
 use App\Http\Controllers\Admin\MentorController;
 use App\Http\Controllers\Admin\PesertaMagangController;
 use Illuminate\Support\Facades\Route;
@@ -43,11 +47,15 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth:peserta')
     ->name('logout');
 
-// Halaman Admin (Contoh)
+//================================= Halaman Admin =================================
 Route::get('/test', function () {
     return view('halaman_admin.test');
 });
 
+// Dashboard
+Route::prefix('dashboard_admin')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard.admin.index');
+});
 // Manajemen Mentor
 Route::prefix('manajemen_mentor')->group(function () {
     Route::get('/', [MentorController::class, 'index'])->name('mentor.index');
@@ -67,4 +75,23 @@ Route::prefix('manajemen_peserta_magang')->group(function () {
     Route::put('/{id}', [PesertaMagangController::class, 'update'])->name('peserta.update');
     Route::get('/{id}', [PesertaMagangController::class, 'show'])->name('peserta.show');
     Route::delete('/{id}', [PesertaMagangController::class, 'destroy'])->name('peserta.destroy');
+});
+
+//Kalender Magang
+Route::prefix('kalender_magang')->group(function () {
+    Route::get('/', [KalenderMagangController::class, 'index'])->name('kalender.index');
+    Route::get('/data-kalender', [KalenderMagangController::class, 'getData'])->name('kalender.data');
+});
+
+//Manajemen Dokumen
+Route::prefix('manajemen_laporan')->group(function () {
+    Route::get('/', [DokumenController::class, 'index'])->name('dokumen.index');
+    Route::get('/create', [DokumenController::class, 'create'])->name('dokumen.create');
+    Route::post('/', [DokumenController::class, 'store'])->name('dokumen.store');
+    Route::delete('/', [DokumenController::class, 'destroyAll'])->name('dokumen.destroy.all');
+});
+
+//Calon Peserta Magang
+Route::prefix('calon_peserta')->group(function () {
+    Route::get('/', [CalonPesertaController::class, 'index'])->name('calon.index');
 });

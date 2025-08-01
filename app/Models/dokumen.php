@@ -8,22 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class dokumen extends Model
 {
     use HasFactory;
-    protected $table = 'anggota';
+    protected $table = 'dokumen';
 
     protected $fillable = [
-                'permohonan_magang',
-                'proposal_proyek',
-                'laporan_bulan_1',
-                'laporan_bulan_2',
-                'laporan_bulan_3',
-                'laporan_bulan_4',
-                'laporan_bulan_5',
-                'laporan_bulan_akhir',
-                'lainnya',
+                'peserta_id',
+                'jenis_dokumen',
+                'file_path',
     ];
 
-    public function ketua()
+    public function peserta()
     {
-        return $this->belongsTo(PesertaMagang::class, 'ketua_id');
+        return $this->belongsTo(PesertaMagang::class, 'peserta_id');
     }
 }

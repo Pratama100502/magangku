@@ -58,13 +58,14 @@
                             </div>
                         </form>
                     </div>
-                    <!-- /.card -->
                 </div>
                 <!-- /.col -->
             </div>
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
+    </section>
+    <!-- /.container-fluid -->
     </section>
 
     <script>
