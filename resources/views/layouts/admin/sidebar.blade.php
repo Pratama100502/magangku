@@ -29,7 +29,7 @@
                 data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('dashboard') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-solid fa-gauge" style="color: #f0f0f0;"></i>
                         <p>Dasboard</p>
                     </a>

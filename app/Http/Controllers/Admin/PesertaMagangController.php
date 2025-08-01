@@ -14,16 +14,16 @@ class PesertaMagangController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PesertaMagang::with('mentor', 'anggota')->latest();
+        $query = PesertaMagang::where('role', '!=', 'admin')->with('mentor', 'anggota')->latest();
 
         if (!$request->has('status') || $request->status == 'semua') {
         } else {
             $query->where('status', $request->status);
         }
 
-        if (!$request->has('status')) {
-            $query->where('status', 'aktif');
-        }
+        // if (!$request->has('status')) {
+        //     $query->where('status', 'semua aktif');
+        // }
 
         if ($request->has('nama')) {
             $query->where('nama', 'like', '%' . $request->nama . '%');
@@ -92,11 +92,11 @@ class PesertaMagangController extends Controller
             ]);
 
             // Jika ada data anggota, simpan ke tabel anggota
-            if ($request->has('anggota') && is_array($request->anggota)) {
-                foreach ($request->anggota as $item) {
+            if ($request->has('nama_anggota') && is_array($request->nama_anggota)) {
+                foreach ($request->nama_anggota as $item) {
                     $peserta->anggota()->create([
-                        'nama' => $item['nama'],
-                        'no_hp' => $item['no_hp'],
+                        'nama_anggota' => $item['nama_anggota'],
+                        'no_hp_anggota' => $item['no_hp_anggota'],
                         'ketua_id' => $peserta->id,
                     ]);
                 }
@@ -171,16 +171,16 @@ class PesertaMagangController extends Controller
                         $anggota = $peserta->anggota()->find($item['id']);
                         if ($anggota) {
                             $anggota->update([
-                                'nama' => $item['nama'],
-                                'no_hp' => $item['no_hp']
+                                'nama_anggota' => $item['nama_anggota'],
+                                'no_hp_anggota' => $item['no_hp_anggota']
                             ]);
                             $submittedAnggotaIds[] = $item['id'];
                         }
                     } else {
 
                         $peserta->anggota()->create([
-                            'nama' => $item['nama'],
-                            'no_hp' => $item['no_hp'],
+                            'nama_anggota' => $item['nama_anggota'],
+                            'no_hp_anggota' => $item['no_hp_anggota'],
                             'ketua_id' => $peserta->id
                         ]);
                     }

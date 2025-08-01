@@ -13,7 +13,7 @@ class Anggota extends Model
 
     protected $fillable = [
         'ketua_id',
-        'nama',
+        'nama_anggota',
         'no_hp_anggota',
     ];
 

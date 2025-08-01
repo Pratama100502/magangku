@@ -9,7 +9,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     {{-- link icon https://fontawesome.com/icons --}}
     <!-- Ionicons -->
@@ -56,7 +56,7 @@
         <!-- /.Header -->
 
         <!-- Navbar -->
-        @include('layouts.admin.navbar')
+        @include('layouts.admin.sidebar')
         <!-- /.Navbar -->
 
         <!-- Isi Konten -->
@@ -70,7 +70,7 @@
         <!-- / .Footer -->
 
         <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">            
+        <aside class="control-sidebar control-sidebar-dark">
         </aside>
         <!-- /.control-sidebar -->
     </div>
@@ -108,7 +108,7 @@
     <script src="{{ asset('asset_halaman_admin/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}">
     </script>
     <!-- AdminLTE App -->
-    <script src="{{ asset('asset_halaman_admin/adminlte/dist/js/adminlte.js') }}"></script>    
+    <script src="{{ asset('asset_halaman_admin/adminlte/dist/js/adminlte.js') }}"></script>
 
     <script>
         $(function() {

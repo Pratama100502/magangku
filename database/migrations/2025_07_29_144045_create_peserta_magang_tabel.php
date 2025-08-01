@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('peserta_magang', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->enum('role', ['admin','peserta'])->default('peserta');
             $table->string('nim')->nullable();
             $table->string('email')->unique();
             $table->string('password');

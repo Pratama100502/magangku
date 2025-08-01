@@ -14,6 +14,7 @@ class PesertaMagang extends Authenticatable
     protected $fillable = [
         'nama',
         'email',
+        'role',
         'password',
         'asal_sekolah',
         'jurusan',
@@ -40,5 +41,16 @@ class PesertaMagang extends Authenticatable
     public function anggota()
     {
         return $this->hasMany(Anggota::class, 'ketua_id');
+    }
+
+    CONST ROLE_ADMIN = 'admin';
+    CONST ROLE_PESERTA_MAGANG = 'peserta';
+
+    public function isAdmin() {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isPesertaMagang() {
+        return $this->role === self::ROLE_PESERTA_MAGANG;
     }
 }

@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #5D636A;
+      background-color: #ffffff;
       font-family: 'Segoe UI', sans-serif;
     }
 
@@ -50,7 +50,7 @@
     }
 
     .login-title {
-      color: white;
+      color: rgb(0, 0, 0);
       font-weight: bold;
       font-size: 24px;
       text-align: center;

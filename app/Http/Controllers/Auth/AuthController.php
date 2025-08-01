@@ -32,8 +32,17 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        // if (Auth::guard('peserta')->attempt($credentials)) {
+        //     return redirect()->intended('dashboard')->with('success', 'Login berhasil!');
+        // }
         if (Auth::guard('peserta')->attempt($credentials)) {
-            return redirect()->intended('dashboard')->with('success', 'Login berhasil!');
+            $user = Auth::guard('peserta')->user();
+
+            if ($user->role === 'admin') {
+                return redirect()->route('peserta.index');
+            } elseif ($user->role === 'peserta') {
+                return redirect()->route('dashboard');
+            }
         }
 
         return redirect()->route('login')->withErrors(['email' => 'Email atau password salah']);
@@ -49,8 +58,10 @@ class AuthController extends Controller
             'jurusan'            => 'required|string|max:255',
             'nim'                => 'required|string|max:50',
             'no_hp'              => 'required|string|max:20',
-            'nama_anggota'            => 'nullable|array',
-            'nama_anggota.*'          => 'nullable|string|max:255',
+            'tanggal_mulai'      => 'date',
+            'tanggal_selesai'    => 'date',
+            'nama_anggota'       => 'nullable|array',
+            'nama_anggota.*'     => 'nullable|string|max:255',
             'no_hp_anggota'      => 'nullable|array',
             'no_hp_anggota.*'    => 'nullable|string|max:20',
             'surat_permohonan'   => 'required|file|mimes:pdf,doc,docx|max:2048',
@@ -73,6 +84,8 @@ class AuthController extends Controller
                 'jurusan'     => $request->jurusan,
                 'nim'         => $request->nim,
                 'no_hp'       => $request->no_hp,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai
             ]);
 
             // Simpan ke tabel anggota

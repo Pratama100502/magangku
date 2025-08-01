@@ -7,9 +7,13 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Home</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button class="btn btn-danger">Logout</button>
+        </form>
+        {{-- <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Logout</a>
-        </li>
+        </li> --}}
     </ul>
 
     <!-- Right navbar links -->

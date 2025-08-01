@@ -4,7 +4,6 @@
 
 @section('content')
 
-<div class="container-xl">
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -67,43 +66,42 @@
         </div>
         <!-- /.container-fluid -->
     </section>
-</div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success') }}',
-                confirmButtonColor: '#3085d6'
-            }).then(() => {
-                window.location.href = "{{ route('mentor.index') }}";
-            });
-        @endif
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#3085d6'
+                }).then(() => {
+                    window.location.href = "{{ route('mentor.index') }}";
+                });
+            @endif
 
-        @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: '{{ session('error') }}',
-                confirmButtonColor: '#d33'
-            });
-        @endif
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#d33'
+                });
+            @endif
 
-        @if($errors->any())
-            let errorMessages = "";
-            @foreach($errors->all() as $error)
-                errorMessages += "{{ $error }}\n";
-            @endforeach
+            @if ($errors->any())
+                let errorMessages = "";
+                @foreach ($errors->all() as $error)
+                    errorMessages += "{{ $error }}\n";
+                @endforeach
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: errorMessages,
-                confirmButtonColor: '#d33'
-            });
-        @endif
-    });
-</script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessages,
+                    confirmButtonColor: '#d33'
+                });
+            @endif
+        });
+    </script>
 @endsection
