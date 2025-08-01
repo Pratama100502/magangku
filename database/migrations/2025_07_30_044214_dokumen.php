@@ -25,7 +25,7 @@ return new class extends Migration
                 'laporan_bulan_akhir',
                 'lainnya'
             ])->default('lainnya');
-                        $table->string('file_path');
+                        $table->string('file_path')->nullable();
             $table->timestamps();
         });
     }

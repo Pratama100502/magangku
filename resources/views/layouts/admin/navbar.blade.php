@@ -29,14 +29,14 @@
                 data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('dashboard.admin.index') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-solid fa-gauge" style="color: #f0f0f0;"></i>
-                        <p>Dasboard</p>
+                        <p>Dashboard</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('calon.index') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-solid fa-file-invoice" style="color: #f0f0f0;"></i>
                         <p>Calon Peserta Magang</p>
                     </a>
@@ -50,14 +50,14 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('kalender.index') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-solid fa-calendar-days" style="color: #f0f0f0;"></i>
                         <p>Kalender Magang</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" style="color: #f0f0f0;">
+                    <a href="{{ route('dokumen.index') }}" class="nav-link" style="color: #f0f0f0;">
                         <i class="nav-icon fa-regular fa-file-pdf" style="color: #f0f0f0;"></i>
                         <p>Laporan Peserta Magang</p>
                     </a>

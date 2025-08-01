@@ -41,4 +41,9 @@ class PesertaMagang extends Authenticatable
     {
         return $this->hasMany(Anggota::class, 'ketua_id');
     }
+
+    public function dokumen()
+    {
+        return $this->hasMany(Dokumen::class, 'peserta_id');
+    }
 }
