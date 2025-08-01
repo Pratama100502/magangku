@@ -143,31 +143,6 @@
                     });
                 });
 
-<<<<<<< HEAD
-            // SweetAlert jika data pencarian tidak ditemukan
-            @if (session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ERROR',
-                    text: "{{ session('error') }}",
-                    background: "#283a5ae6",
-                    color: "#fff"
-                });
-            @endif
-        });
-        @if ($mentors->isEmpty())
-            Swal.fire({
-                icon: 'warning',
-                title: 'Data Kosong!',
-                text: 'Tidak ada data mentor yang tersedia.',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK',
-                color: "#fff",
-                background: "#283a5ae6"
-            });
-        @endif
-    </script>
-=======
                 // SweetAlert jika data pencarian tidak ditemukan
                 @if (session('error'))
                     Swal.fire({
@@ -190,7 +165,6 @@
                     background: "#283a5ae6"
                 });
             @endif
-        </script>
-    </body>
->>>>>>> dac0b1e91c0534eb34b86f66032a77d5ab1ca621
+        });
+    </script>
 @endsection
