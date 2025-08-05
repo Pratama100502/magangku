@@ -39,9 +39,9 @@ class AuthController extends Controller
             $user = Auth::guard('peserta')->user();
 
             if ($user->role === 'admin') {
-                return redirect()->route('peserta.index');
+                return redirect()->route('dashboard.admin.index');
             } elseif ($user->role === 'peserta') {
-                return redirect()->route('dashboard');
+                return redirect()->route('peserta.dashboard');
             }
         }
 

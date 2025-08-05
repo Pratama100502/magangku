@@ -95,3 +95,7 @@ Route::prefix('manajemen_laporan')->group(function () {
 Route::prefix('calon_peserta')->group(function () {
     Route::get('/', [CalonPesertaController::class, 'index'])->name('calon.index');
 });
+
+Route::prefix('dashboard_peserta')->group(function () {
+    Route::get('/', [DashboardController::class, 'indexPeserta'])->name('peserta.dashboard');
+});

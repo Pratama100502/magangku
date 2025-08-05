@@ -25,4 +25,8 @@ class DashboardController extends Controller
             'pesertaSelesai',
         ));
     }
+
+    public function indexPeserta() {
+        return view('halaman_peserta.dashboard');
+    }
 }

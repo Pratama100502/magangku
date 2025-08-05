@@ -4,9 +4,7 @@
 
 @section('content')
     <div class="container-fluid">
-
         <div class="row">
-
             <div class="col-xl-3 col-md-6 mb-4">
                 <a href="{{ route('calon.index') }}" class="text-decoration-none text-body">
                     <div class="card border-left-warning shadow h-100 py-2">
@@ -82,11 +80,9 @@
                     </div>
                 </a>
             </div>
-
         </div>
 
         <div class="row">
-
             <div class="col-xl-3 col-md-6 mb-4">
                 <a href="{{ route('mentor.index') }}" class="text-decoration-none text-body">
                     <div class="card border-left-success shadow h-100 py-2">
@@ -105,8 +101,6 @@
                     </div>
                 </a>
             </div>
-
         </div>
-
     </div>
 @endsection
