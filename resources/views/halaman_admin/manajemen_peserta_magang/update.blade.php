@@ -185,7 +185,8 @@
                                                 <input type="hidden" name="anggota[{{ $index }}][id]"
                                                     value="{{ $anggota->id }}">
                                                 <input type="text" class="form-control"
-                                                    name="anggota[{{ $index }}][nama_anggota]" placeholder="Nama Anggota"
+                                                    name="anggota[{{ $index }}][nama_anggota]"
+                                                    placeholder="Nama Anggota"
                                                     value="{{ old('anggota.' . $index . '.nama_anggota', $anggota->nama_anggota) }}">
                                             </div>
                                             <div class="col-md-5">
@@ -227,19 +228,19 @@
         <!-- /.container-fluid -->
     </section>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Anggota dinamis
-                const anggotaContainer = document.getElementById('anggota-container');
-                const tambahAnggotaBtn = document.getElementById('tambah-anggota');
-                let anggotaCount = {{ $peserta->anggota->count() }};
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Anggota dinamis
+            const anggotaContainer = document.getElementById('anggota-container');
+            const tambahAnggotaBtn = document.getElementById('tambah-anggota');
+            let anggotaCount = {{ $peserta->anggota->count() }};
 
-                // Template untuk anggota baru
-                function createAnggotaField() {
-                    anggotaCount++;
-                    const div = document.createElement('div');
-                    div.className = 'anggota-item row mb-3';
-                    div.innerHTML = `
+            // Template untuk anggota baru
+            function createAnggotaField() {
+                anggotaCount++;
+                const div = document.createElement('div');
+                div.className = 'anggota-item row mb-3';
+                div.innerHTML = `
                     <div class="col-md-5">
                         <input type="text" class="form-control" name="anggota[${anggotaCount}][nama_anggota]" placeholder="Nama Anggota">
                     </div>
@@ -252,41 +253,48 @@
                         </button>
                     </div>
                 `;
-                    return div;
+                return div;
+            }
+
+            // Tambah anggota baru
+            tambahAnggotaBtn.addEventListener('click', function() {
+                anggotaContainer.appendChild(createAnggotaField());
+            });
+
+            anggotaContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hapus-anggota') || e.target.closest('.hapus-anggota')) {
+                    const item = e.target.closest('.anggota-item');
+                    if (item) {
+                        item.remove();
+                    }
                 }
-
-                // Tambah anggota baru
-                tambahAnggotaBtn.addEventListener('click', function() {
-                    anggotaContainer.appendChild(createAnggotaField());
-                });
-<<<<<<< HEAD
-            @endif
-
-            @if (session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: '{{ session('error') }}',
-                    confirmButtonColor: '#d33'
-                });
-            @endif
-
-            @if ($errors->any())
-                let errorMessages = "";
-                @foreach ($errors->all() as $error)
-                    errorMessages += "{{ $error }}\n";
-                @endforeach
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: errorMessages,
-                    confirmButtonColor: '#d33'
-                });
-            @endif
+            });
         });
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33'
+            });
+        @endif
+
+        @if ($errors->any())
+            let errorMessages = "";
+            @foreach ($errors->all() as $error)
+                errorMessages += "{{ $error }}\n";
+            @endforeach
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessages,
+                confirmButtonColor: '#d33'
+            });
+        @endif
     </script>
-=======
+    {{-- =======
 
                 // Hapus anggota
                 anggotaContainer.addEventListener('click', function(e) {
@@ -335,5 +343,5 @@
             });
         </script>
     </body>
->>>>>>> dac0b1e91c0534eb34b86f66032a77d5ab1ca621
+>>>>>>> dac0b1e91c0534eb34b86f66032a77d5ab1ca621 --}}
 @endsection

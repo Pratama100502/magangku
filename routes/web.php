@@ -75,6 +75,7 @@ Route::prefix('manajemen_peserta_magang')->group(function () {
     Route::put('/{id}', [PesertaMagangController::class, 'update'])->name('peserta.update');
     Route::get('/{id}', [PesertaMagangController::class, 'show'])->name('peserta.show');
     Route::delete('/{id}', [PesertaMagangController::class, 'destroy'])->name('peserta.destroy');
+    Route::patch('/{id}/status', [PesertaMagangController::class, 'updateStatus'])->name('admin.peserta.updateStatus');
 });
 
 //Kalender Magang

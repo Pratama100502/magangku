@@ -43,6 +43,10 @@ class PesertaMagang extends Authenticatable
         return $this->hasMany(Anggota::class, 'ketua_id');
     }
 
+    public function dokumen() {
+        return $this->hasMany(dokumen::class, 'peserta_id');
+    }
+
     CONST ROLE_ADMIN = 'admin';
     CONST ROLE_PESERTA_MAGANG = 'peserta';
 

@@ -41,7 +41,14 @@ class AuthController extends Controller
             if ($user->role === 'admin') {
                 return redirect()->route('dashboard.admin.index');
             } elseif ($user->role === 'peserta') {
-                return redirect()->route('peserta.dashboard');
+                if ($user->status === 'aktif') {
+                    return redirect()->route('dashboard'); // halaman utama setelah diterima
+                } elseif ($user->status === 'mengajukan') {
+                    return redirect()->route('peserta.dashboard')->with('info', 'Pendaftaran Anda sedang diproses oleh admin.');
+                } elseif ($user->status === 'ditolak') {
+                    Auth::guard('peserta')->logout();
+                    return redirect()->route('login')->withErrors(['status' => 'Pendaftaran Anda ditolak.']);
+                }
             }
         }
 
@@ -137,7 +144,13 @@ class AuthController extends Controller
     public function dashboard()
     {
         if (Auth::guard('peserta')->check()) {
-            return view('dashboard');
+            $user = Auth::guard('peserta')->user();
+
+            if ($user->status === 'aktif') {
+                return view('dashboard'); // dashboard peserta yang sudah diterima
+            }
+
+            return redirect()->route('peserta.dashboard')->with('info', 'Status Anda belum aktif.');
         }
 
         return redirect()->route('login')->withErrors(['auth' => 'Silakan login terlebih dahulu.']);
