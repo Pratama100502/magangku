@@ -32,16 +32,20 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // if (Auth::guard('peserta')->attempt($credentials)) {
-        //     return redirect()->intended('dashboard')->with('success', 'Login berhasil!');
-        // }
         if (Auth::guard('peserta')->attempt($credentials)) {
             $user = Auth::guard('peserta')->user();
 
             if ($user->role === 'admin') {
                 return redirect()->route('dashboard.admin.index');
             } elseif ($user->role === 'peserta') {
-                return redirect()->route('peserta.dashboard');
+                if ($user->status === 'aktif') {
+                    return redirect()->route('dashboard');
+                } elseif ($user->status === 'mengajukan') {
+                    return redirect()->route('peserta.dashboard')->with('info', 'Pendaftaran Anda sedang diproses oleh admin.');
+                } elseif ($user->status === 'ditolak') {
+                    Auth::guard('peserta')->logout();
+                    return redirect()->route('login')->withErrors(['status' => 'Pendaftaran Anda ditolak.']);
+                }
             }
         }
 
@@ -77,25 +81,29 @@ class AuthController extends Controller
 
             // Simpan ke tabel peserta_magang
             $peserta = PesertaMagang::create([
-                'nama'        => $request->nama,
-                'email'       => $request->email,
-                'password'    => Hash::make($request->password),
-                'asal_sekolah' => $request->asal_sekolah,
-                'jurusan'     => $request->jurusan,
-                'nim'         => $request->nim,
-                'no_hp'       => $request->no_hp,
-                'tanggal_mulai' => $request->tanggal_mulai,
-                'tanggal_selesai' => $request->tanggal_selesai
+                'nama'             => $request->nama,
+                'email'            => $request->email,
+                'password'         => Hash::make($request->password),
+                'asal_sekolah'     => $request->asal_sekolah,
+                'jurusan'          => $request->jurusan,
+                'nim'              => $request->nim,
+                'no_hp'            => $request->no_hp,
+                'tanggal_mulai'    => $request->tanggal_mulai,
+                'tanggal_selesai'  => $request->tanggal_selesai
             ]);
+
+            $pesertaId = $peserta->id;
 
             // Simpan ke tabel anggota
             if (!empty($request->nama_anggota) && !empty($request->no_hp_anggota)) {
                 foreach ($request->nama_anggota as $i => $namaAnggota) {
-                    if ($namaAnggota && !empty($request->no_hp_anggota[$i])) {
+                    $noHp = $request->no_hp_anggota[$i] ?? null;
+
+                    if ($namaAnggota && $noHp) {
                         DB::table('anggota')->insert([
-                            'ketua_id' => $peserta->id,
-                            'nama_anggota' => $namaAnggota,
-                            'no_hp_anggota' => $request->no_hp_anggota[$i],
+                            'ketua_id'   => $pesertaId,
+                            'nama'       => $namaAnggota,
+                            'no_hp'      => $noHp,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
@@ -103,21 +111,21 @@ class AuthController extends Controller
                 }
             }
 
-            // Simpan ke tabel dokumen (dua entri: permohonan & proposal)
+            // Simpan ke tabel dokumen
             DB::table('dokumen')->insert([
                 [
-                    'peserta_id'     => $peserta->id,
-                    'jenis_dokumen'  => 'permohonan_magang',
-                    'file_path'      => $permohonanPath,
-                    'created_at'     => now(),
-                    'updated_at'     => now(),
+                    'peserta_id'    => $pesertaId,
+                    'jenis_dokumen' => 'permohonan_magang',
+                    'file_path'     => $permohonanPath,
+                    'created_at'    => now(),
+                    'updated_at'    => now(),
                 ],
                 [
-                    'peserta_id'     => $peserta->id,
-                    'jenis_dokumen'  => 'proposal_proyek',
-                    'file_path'      => $proposalPath,
-                    'created_at'     => now(),
-                    'updated_at'     => now(),
+                    'peserta_id'    => $pesertaId,
+                    'jenis_dokumen' => 'proposal_proyek',
+                    'file_path'     => $proposalPath,
+                    'created_at'    => now(),
+                    'updated_at'    => now(),
                 ]
             ]);
 
@@ -133,11 +141,16 @@ class AuthController extends Controller
         }
     }
 
-
     public function dashboard()
     {
         if (Auth::guard('peserta')->check()) {
-            return view('dashboard');
+            $user = Auth::guard('peserta')->user();
+
+            if ($user->status === 'aktif') {
+                return view('dashboard');
+            }
+
+            return redirect()->route('peserta.dashboard')->with('info', 'Status Anda belum aktif.');
         }
 
         return redirect()->route('login')->withErrors(['auth' => 'Silakan login terlebih dahulu.']);

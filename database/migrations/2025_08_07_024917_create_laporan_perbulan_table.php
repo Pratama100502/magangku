@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin', function (Blueprint $table) {
+        Schema::create('laporan_perbulans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('role', ['admin','peserta'])->default('peserta');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nama_file');
             $table->timestamps();
         });
+
     }
 
     /**
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admin');
+        Schema::dropIfExists('laporan_perbulan');
     }
 };

@@ -21,14 +21,19 @@ class CalonPesertaController extends Controller
         $pesertas = $query->paginate(10)->appends($request->query());
 
         $pesertas->getCollection()->transform(function ($peserta) {
-            $peserta->total_anggota = $peserta->anggota->count();
+            $peserta->total_anggota = $peserta->anggota ? $peserta->anggota->count() : 0;
 
-            $peserta->has_permohonan = $peserta->dokumen->contains('jenis_dokumen', 'permohonan_magang');
+            $peserta->has_permohonan = $peserta->dokumen && $peserta->dokumen->count() > 0
+                ? $peserta->dokumen->contains('jenis_dokumen', 'permohonan_magang')
+                : false;
 
-            $peserta->has_proposal = $peserta->dokumen->contains('jenis_dokumen', 'proposal_proyek');
+            $peserta->has_proposal = $peserta->dokumen && $peserta->dokumen->count() > 0
+                ? $peserta->dokumen->contains('jenis_dokumen', 'proposal_proyek')
+                : false;
 
             return $peserta;
         });
+
 
         return view('halaman_admin.calon_peserta_magang.index', compact('pesertas'));
     }

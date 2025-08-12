@@ -64,10 +64,10 @@
                                     <td class="text-center">
                                         @if ($peserta->has_permohonan)
                                             @php
-                                                $dokumen = $peserta->dokumen->firstWhere(
+                                                $dokumen = $peserta->dokumen()->where(
                                                     'jenis_dokumen',
                                                     'permohonan_magang',
-                                                );
+                                                )->first();
                                             @endphp
                                             <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank"
                                                 class="btn btn-sm btn-link" title="Lihat Dokumen">
@@ -81,10 +81,10 @@
                                     <td class="text-center">
                                         @if ($peserta->has_proposal)
                                             @php
-                                                $dokumen = $peserta->dokumen->firstWhere(
+                                                $dokumen = $peserta->dokumen()->where(
                                                     'jenis_dokumen',
                                                     'proposal_proyek',
-                                                );
+                                                )->first();
                                             @endphp
                                             <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank"
                                                 class="btn btn-sm btn-link" title="Lihat Dokumen">

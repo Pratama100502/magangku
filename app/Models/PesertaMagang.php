@@ -43,6 +43,10 @@ class PesertaMagang extends Authenticatable
         return $this->hasMany(Anggota::class, 'ketua_id');
     }
 
+    public function dokumen()
+{
+    return $this->hasMany(Dokumen::class, 'peserta_id'); // sesuaikan foreign key
+}
     CONST ROLE_ADMIN = 'admin';
     CONST ROLE_PESERTA_MAGANG = 'peserta';
 

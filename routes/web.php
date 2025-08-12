@@ -1,17 +1,20 @@
 <?php
 
-use App\Http\Controllers\Admin\CalonPesertaController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DokumenController;
-use App\Http\Controllers\Admin\KalenderMagangController;
-use App\Http\Controllers\Admin\MentorController;
-use App\Http\Controllers\Admin\PesertaMagangController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ReferensiController;
+use App\Http\Controllers\LaporanPerbulanController;
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MentorController;
+use App\Http\Controllers\Admin\PesertaMagangController;
+use App\Http\Controllers\Admin\DokumenController;
+use App\Http\Controllers\Admin\KalenderMagangController;
+use App\Http\Controllers\Admin\CalonPesertaController;
 
-// Halaman utama
+// ===================== HALAMAN UTAMA =====================
 Route::get('/', function () {
     if (Auth::guard('peserta')->check()) {
         return redirect()->route('dashboard');
@@ -19,6 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// ===================== AUTH PESERTA =====================
 // LOGIN
 Route::get('/login', [AuthController::class, 'index'])
     ->middleware('guest:peserta')
@@ -30,33 +34,47 @@ Route::post('/login', [AuthController::class, 'postLogin'])
 
 // REGISTER
 Route::get('/register', [AuthController::class, 'registration'])
-    ->middleware('guest:peserta') // konsisten pakai guard peserta
+    ->middleware('guest:peserta')
     ->name('register');
 
 Route::post('/register', [AuthController::class, 'postRegistration'])
     ->middleware('guest:peserta')
     ->name('register.post');
 
-// DASHBOARD (hanya untuk peserta yang sudah login)
-Route::get('/dashboard', [AuthController::class, 'dashboard'])
-    ->middleware('auth:peserta')
-    ->name('dashboard');
-
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth:peserta')
     ->name('logout');
 
-//================================= Halaman Admin =================================
-Route::get('/test', function () {
-    return view('halaman_admin.test');
+// ===================== DASHBOARD PESERTA =====================
+Route::get('/dashboard', [AuthController::class, 'dashboard'])
+    ->middleware('auth:peserta')
+    ->name('dashboard');
+
+// ===================== REFERENSI PESERTA =====================
+Route::post('/referensi/upload', [ReferensiController::class, 'upload'])
+    ->middleware('auth:peserta')
+    ->name('referensi.upload');
+
+Route::middleware(['auth:peserta'])->prefix('peserta')->group(function () {
+    Route::get('/laporan-akhir', [App\Http\Controllers\Peserta\LaporanAkhirController::class, 'index'])->name('peserta.laporan-akhir.index');
+    Route::post('/laporan-akhir', [App\Http\Controllers\Peserta\LaporanAkhirController::class, 'store'])->name('peserta.laporan-akhir.store');
+    });
+
+// ===================== LAPORAN PERBULAN =====================
+Route::middleware('auth:peserta')->group(function () {
+    Route::get('/laporan', [LaporanPerbulanController::class, 'index'])->name('laporan.index');
+    Route::post('/laporan/upload', [LaporanPerbulanController::class, 'upload'])->name('laporan.upload');
+    Route::get('/laporan/download/{file}', [LaporanPerbulanController::class, 'download'])->name('laporan.download');
 });
 
-// Dashboard
+
+// ===================== ADMIN SECTION =====================
 Route::prefix('dashboard_admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.admin.index');
 });
-// Manajemen Mentor
+
+// ========== MANAJEMEN MENTOR ==========
 Route::prefix('manajemen_mentor')->group(function () {
     Route::get('/', [MentorController::class, 'index'])->name('mentor.index');
     Route::get('/create', [MentorController::class, 'create'])->name('mentor.create');
@@ -66,7 +84,7 @@ Route::prefix('manajemen_mentor')->group(function () {
     Route::delete('/{id}', [MentorController::class, 'destroy'])->name('mentor.destroy');
 });
 
-// Manajemen Peserta Magang
+// ========== MANAJEMEN PESERTA MAGANG ==========
 Route::prefix('manajemen_peserta_magang')->group(function () {
     Route::get('/', [PesertaMagangController::class, 'index'])->name('peserta.index');
     Route::get('/create', [PesertaMagangController::class, 'create'])->name('peserta.create');
@@ -77,13 +95,13 @@ Route::prefix('manajemen_peserta_magang')->group(function () {
     Route::delete('/{id}', [PesertaMagangController::class, 'destroy'])->name('peserta.destroy');
 });
 
-//Kalender Magang
+// ========== KALENDER MAGANG ==========
 Route::prefix('kalender_magang')->group(function () {
     Route::get('/', [KalenderMagangController::class, 'index'])->name('kalender.index');
     Route::get('/data-kalender', [KalenderMagangController::class, 'getData'])->name('kalender.data');
 });
 
-//Manajemen Dokumen
+// ========== MANAJEMEN DOKUMEN ==========
 Route::prefix('manajemen_laporan')->group(function () {
     Route::get('/', [DokumenController::class, 'index'])->name('dokumen.index');
     Route::get('/create', [DokumenController::class, 'create'])->name('dokumen.create');
@@ -91,11 +109,17 @@ Route::prefix('manajemen_laporan')->group(function () {
     Route::delete('/', [DokumenController::class, 'destroyAll'])->name('dokumen.destroy.all');
 });
 
-//Calon Peserta Magang
+// ========== CALON PESERTA ==========
 Route::prefix('calon_peserta')->group(function () {
     Route::get('/', [CalonPesertaController::class, 'index'])->name('calon.index');
 });
 
+// ========== DASHBOARD PESERTA (Admin Lihat) ==========
 Route::prefix('dashboard_peserta')->group(function () {
     Route::get('/', [DashboardController::class, 'indexPeserta'])->name('peserta.dashboard');
+});
+
+// ========== TEST PAGE ==========
+Route::get('/test', function () {
+    return view('halaman_admin.test');
 });

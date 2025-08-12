@@ -61,7 +61,7 @@
 
                                     <td class="text-center">
                                         @php
-                                            $dok = $peserta->dokumen->firstWhere('jenis_dokumen', 'permohonan_magang');
+                                            $dok = $peserta->dokumen()->where('jenis_dokumen', 'permohonan_magang')->first();
                                         @endphp
                                         @if ($dok)
                                             <a href="{{ asset('storage/' . $dok->file_path) }}" target="_blank"
@@ -75,7 +75,7 @@
 
                                     <td class="text-center">
                                         @php
-                                            $dok = $peserta->dokumen->firstWhere('jenis_dokumen', 'proposal_proyek');
+                                            $dok = $peserta->dokumen()->where('jenis_dokumen', 'proposal_proyek')->first();
                                         @endphp
                                         @if ($dok)
                                             <a href="{{ asset('storage/' . $dok->file_path) }}" target="_blank"
@@ -89,7 +89,7 @@
 
                                     <td class="text-center">
                                         @php
-                                            $laporanBulanan = $peserta->dokumen->whereIn('jenis_dokumen', [
+                                            $laporanBulanan = $peserta->dokumen()->whereIn('jenis_dokumen', [
                                                 'laporan_bulan_1',
                                                 'laporan_bulan_2',
                                                 'laporan_bulan_3',
@@ -112,10 +112,10 @@
 
                                     <td class="text-center">
                                         @php
-                                            $dok = $peserta->dokumen->firstWhere(
+                                            $dok = $peserta->dokumen()->where(
                                                 'jenis_dokumen',
                                                 'laporan_bulan_akhir',
-                                            );
+                                            )->first();
                                         @endphp
                                         @if ($dok)
                                             <a href="{{ asset('storage/' . $dok->file_path) }}" target="_blank"
@@ -129,7 +129,7 @@
 
                                     <td class="text-center">
                                         @php
-                                            $dokumensLainnya = $peserta->dokumen->where('jenis_dokumen', 'lainnya');
+                                            $dokumensLainnya = $peserta->dokumen()->where('jenis_dokumen', 'lainnya');
                                         @endphp
 
                                         @if ($dokumensLainnya->count() > 0)
@@ -148,7 +148,7 @@
                                         <form action="{{ route('dokumen.destroy.all') }}" method="POST" class="d-inline delete-all-form">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm delete-all-btn" 
+                                            <button type="button" class="btn btn-danger btn-sm delete-all-btn"
                                                 title="Hapus Semua Dokumen">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -195,7 +195,7 @@
                         });
                     });
                 });
-        
+
                 // SweetAlert jika data pencarian tidak ditemukan
                 @if (session('error'))
                     Swal.fire({
@@ -206,7 +206,7 @@
                         color: "#fff"
                     });
                 @endif
-        
+
                 @if ($pesertaMagang->isEmpty())
                     Swal.fire({
                         icon: 'warning',
