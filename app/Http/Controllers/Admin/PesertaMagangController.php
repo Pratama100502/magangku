@@ -231,4 +231,17 @@ class PesertaMagangController extends Controller
                 ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
+
+    public function updateStatus($id, Request $request)
+    {
+        $request->validate([
+            'status' => 'required|in:mengajukan,aktif,selesai,ditolak'
+        ]);
+
+        $peserta = PesertaMagang::findOrFail($id);
+        $peserta->status = $request->status;
+        $peserta->save();
+
+        return redirect()->back()->with('success', 'Status peserta berhasil diperbarui.');
+    }
 }

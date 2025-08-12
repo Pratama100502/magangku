@@ -7,7 +7,8 @@ use Illuminate\Notifications\Notifiable;
 
 class PesertaMagang extends Authenticatable
 {
-    use Notifiable;
+
+      use Notifiable;
 
     protected $table = 'peserta_magang';
 
@@ -43,10 +44,17 @@ class PesertaMagang extends Authenticatable
         return $this->hasMany(Anggota::class, 'ketua_id');
     }
 
+HEAD
     public function dokumen()
 {
     return $this->hasMany(Dokumen::class, 'peserta_id'); // sesuaikan foreign key
 }
+
+    public function dokumen() {
+        return $this->hasMany(dokumen::class, 'peserta_id');
+    }
+
+ e98bfb4426354dbac02822d3731d483fcd36c4ae
     CONST ROLE_ADMIN = 'admin';
     CONST ROLE_PESERTA_MAGANG = 'peserta';
 
